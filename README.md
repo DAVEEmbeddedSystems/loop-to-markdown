@@ -27,6 +27,10 @@ A Tampermonkey userscript that converts Microsoft Loop pages to Markdown with on
 - Yuta TJ (yutatj@) - Table cell fallback extraction
 - Shrinivas Acharya - Bold detection, code language detection, ordered lists
 
+## Contributing
+
+Found a bug or have an improvement? PRs are welcome! This script was built with contributions from multiple people - yours could be next.
+
 ## License
 
 GPL-3.0
