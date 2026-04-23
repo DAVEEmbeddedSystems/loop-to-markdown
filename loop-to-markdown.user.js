@@ -62,6 +62,36 @@
         return avatar ? `@${avatar.getAttribute('aria-label')}` : '';
     };
 
+    const getPageTitle = pages => {
+        const candidateSelectors = [
+            'div[role="heading"][aria-level="1"]',
+            '[data-automation-id="page-title"]',
+            '[data-testid="page-title"]',
+            '[aria-label="Title"]',
+            'input[aria-label="Title"]',
+            'textarea[aria-label="Title"]'
+        ];
+
+        for (const selector of candidateSelectors) {
+            const el = document.querySelector(selector);
+            const value = normalize(el?.value || el?.textContent || '');
+            if (value) return value;
+        }
+
+        const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content');
+        if (metaTitle) return normalize(metaTitle);
+
+        const docTitle = normalize(document.title.replace(/\s*[-|].*$/, ''));
+        if (docTitle) return docTitle;
+
+        const firstPara = pages[0]?.querySelector('.scriptor-paragraph:not([role="heading"] *)');
+        if (firstPara && !firstPara.querySelector('[role="heading"]') && !firstPara.closest('.scriptor-listItem, table')) {
+            return normalize(firstPara.textContent);
+        }
+
+        return '';
+    };
+
     const getTextContent = (container, skipTables = false) => {
         let text = '';
         const targets = container.querySelectorAll('.scriptor-textRun, [data-testid="resolvedAtMention"]');
@@ -158,11 +188,8 @@
 
         const lines = [], processed = new Set(), codeTexts = new Set(), codeRawTexts = new Set();
 
-        const firstPara = pages[0]?.querySelector('.scriptor-paragraph:not([role="heading"] *)');
-        if (firstPara && !firstPara.querySelector('[role="heading"]') && !firstPara.closest('.scriptor-listItem, table')) {
-            const title = normalize(firstPara.textContent);
-            if (title) { lines.push(`# ${title}`, ''); processed.add(firstPara); }
-        }
+        const title = getPageTitle(pages);
+        if (title) lines.push(`# ${title}`, '');
 
         pages.forEach(page => {
             page.querySelectorAll('.scriptor-paragraph, .scriptor-listItem, .scriptor-component-code-block, [role="table"], [role="heading"]').forEach(el => {
