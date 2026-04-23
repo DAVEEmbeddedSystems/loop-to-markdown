@@ -223,8 +223,9 @@
                 const heading = el.getAttribute('role') === 'heading' ? el : el.querySelector('[role="heading"]');
                 if (heading) {
                     const level = parseInt(heading.getAttribute('aria-level') || '1', 10);
+                    const markdownLevel = Math.min(level + 1, 6);
                     let text = getTextContent(heading, true).replace(/\*\*/g, '').trim();
-                    if (text) lines.push('', `${'#'.repeat(Math.min(level, 6))} ${text}`, '');
+                    if (text) lines.push('', `${'#'.repeat(markdownLevel)} ${text}`, '');
                     processed.add(el);
                     return;
                 }
