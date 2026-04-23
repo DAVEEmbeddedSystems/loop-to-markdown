@@ -26,6 +26,27 @@
 (function() {
     'use strict';
 
+    const copyToClipboard = async text => {
+        if (typeof GM_setClipboard === 'function') {
+            GM_setClipboard(text, 'text');
+            return;
+        }
+
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            return;
+        }
+
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+    };
+
     const normalize = text => {
         if (!text) return '';
         let result = text.trim().replace(/\s+/g, ' ');
@@ -131,7 +152,7 @@
         return lines;
     };
 
-    function convertToMarkdown() {
+    async function convertToMarkdown() {
         const pages = [...document.querySelectorAll('.scriptor-pageFrame')].filter(p => !p.closest('table'));
         if (!pages.length) return alert('No Loop content found');
 
@@ -228,7 +249,7 @@
 
         let markdown = lines.join('\n').replace(/\n{3,}/g, '\n\n').trim();
         markdown = markdown.replace(/(```\w*\n[\s\S]*?\n```)\n\n\1/g, '$1');
-        GM_setClipboard(markdown, 'text');
+        await copyToClipboard(markdown);
 
         const note = document.createElement('div');
         note.textContent = '✓ Markdown copied!';
