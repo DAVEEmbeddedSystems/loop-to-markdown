@@ -1,6 +1,6 @@
 # Loop to Markdown
 
-Tampermonkey userscripts that convert Microsoft Loop pages to Markdown or MediaWiki with one click.
+Tampermonkey userscripts (or bookmarklets) that convert Microsoft Loop pages to Markdown or MediaWiki with one click.
 
 ## Features
 
@@ -25,10 +25,26 @@ Tampermonkey userscripts that convert Microsoft Loop pages to Markdown or MediaW
    - [Markdown userscript](https://raw.githubusercontent.com/oztalha/loop-to-markdown/main/loop-to-markdown.user.js)
    - [MediaWiki userscript](https://raw.githubusercontent.com/oztalha/loop-to-markdown/main/loop-to-mediawiki.user.js)
 
+## Bookmarklet (no extension required)
+
+Prefer a bookmarks-bar button over a browser extension? The same exporters are
+also available as bookmarklets in `dist/`.
+
+1. Open `dist/install.html` in your browser
+2. Drag the button you want onto your bookmarks bar:
+   - `📋 Copy Loop as Markdown`
+   - `📋 Copy Loop as MediaWiki`
+3. Open a Microsoft Loop page and click the bookmark to copy the page
+
+The bookmarklets are generated from the userscripts by `build-bookmarklets.py`,
+so the two stay in sync — edit a `*.user.js`, then run
+`python3 build-bookmarklets.py` to regenerate `dist/`.
+
 ## Usage
 
 1. Open any Microsoft Loop page
-2. Click the exporter button in the bottom-left corner:
+2. Click the exporter button in the bottom-left corner (userscript) or the
+   bookmarks-bar bookmarklet:
    - `📋 Copy as Markdown`
    - `📋 Copy as MediaWiki`
 3. Paste the copied output into your target editor or wiki
